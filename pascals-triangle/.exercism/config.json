@@ -1,0 +1,24 @@
+{
+  "authors": [
+    "jvarness"
+  ],
+  "contributors": [
+    "devkabiir",
+    "Stargator",
+    "kytrinyx"
+  ],
+  "files": {
+    "solution": [
+      "lib/pascals_triangle.dart"
+    ],
+    "test": [
+      "test/pascals_triangle_test.dart"
+    ],
+    "example": [
+      ".meta/lib/example.dart"
+    ]
+  },
+  "blurb": "Compute Pascal's triangle up to a given number of rows.",
+  "source": "Pascal's Triangle at Wolfram Math World",
+  "source_url": "https://www.wolframalpha.com/input/?i=Pascal%27s+triangle"
+}

@@ -1,0 +1,25 @@
+{
+  "authors": [
+    "SuperPaintman"
+  ],
+  "contributors": [
+    "rafaelalvessa",
+    "Stargator",
+    "Zureka",
+    "kytrinyx"
+  ],
+  "files": {
+    "solution": [
+      "lib/gigasecond.dart"
+    ],
+    "test": [
+      "test/gigasecond_test.dart"
+    ],
+    "example": [
+      ".meta/lib/example.dart"
+    ]
+  },
+  "blurb": "Given a moment, determine the moment that would be after a gigasecond has passed.",
+  "source": "Chapter 9 in Chris Pine's online Learn to Program tutorial.",
+  "source_url": "https://pine.fm/LearnToProgram/?Chapter=09"
+}
