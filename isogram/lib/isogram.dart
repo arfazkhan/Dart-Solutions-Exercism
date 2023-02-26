@@ -1,12 +1,11 @@
 class Isogram {
   bool isIsogram(String word) {
-    final characters = Set<int>();
-    for (var i = 0; i < word.length; i++) {
-      final character = word[i].toLowerCase().codeUnitAt(0);
-      if (characters.contains(character)) {
+    final characters = <String>{};
+    for (var char in word.replaceAll(RegExp(r'[-\s]'), '').toLowerCase().split('')) {
+      if (characters.contains(char)) {
         return false;
       }
-      characters.add(character);
+      characters.add(char);
     }
     return true;
   }
