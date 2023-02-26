@@ -21,24 +21,24 @@ void main() {
     test('divide if even', () {
       final result = collatzConjecture.steps(16);
       expect(result, equals(4));
-    }, skip: true);
+    }, skip: false);
 
     test('even and odd steps', () {
       final result = collatzConjecture.steps(12);
       expect(result, equals(9));
-    }, skip: true);
+    }, skip: false);
 
     test('large number of even and odd steps', () {
       final result = collatzConjecture.steps(1000000);
       expect(result, equals(152));
-    }, skip: true);
+    }, skip: false);
 
     test('zero is an error', () {
       expect(() => collatzConjecture.steps(0), throwsA(onlyPositive));
-    }, skip: true);
+    }, skip: false);
 
     test('negative value is an error', () {
       expect(() => collatzConjecture.steps(-15), throwsA(onlyPositive));
-    }, skip: true);
+    }, skip: false);
   });
 }

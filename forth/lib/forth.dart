@@ -1,135 +1,83 @@
 class Forth {
-  var stack = <int>[];
-  var definitions = <String, List<String>>{};
-
-  void arithmetic(String token) {
-    if (stack.length < 2) {
-      throw FormatException('Exception: Stack empty');
-    }
-    switch (token) {
-      case '+':
-        stack.add(stack.removeLast() + stack.removeLast());
-        break;
-      case '-':
-        stack.add(stack.removeLast() - stack.removeLast());
-        break;
-      case '*':
-        stack.add(stack.removeLast() * stack.removeLast());
-        break;
-      case '/':
-        final divisor = stack.removeLast();
-        if (divisor == 0) {
-          throw FormatException("Division by zero");
-        }
-        stack.add(stack.removeLast() ~/ divisor);
-        break;
-      default:
-        throw FormatException('Unknown operator: $token');
-    }
+  late List<int> stack;
+  late Map<String, String> definitions;
+  Forth() {
+    this.stack = [];
+    this.definitions = {};
   }
-
-  void stackManipulation(String token) {
-    switch (token.toLowerCase()) {
-      case 'dup':
-        if (stack.isEmpty) {
-          throw FormatException('Stack empty');
-        }
-        stack.add(stack.last);
-        break;
-      case 'drop':
-        if (stack.isEmpty) {
-          throw FormatException('Stack empty');
-        }
-        stack.removeLast();
-        break;
-      case 'swap':
-        if (stack.length < 2) {
-          throw FormatException('Stack empty');
-        } else {
-          final first = stack.removeLast();
-          final second = stack.removeLast();
-          stack.addAll([first, second]);
-        }
-        break;
-      case 'over':
-        if (stack.length < 2) {
-          throw FormatException('Stack empty');
-        } else {
-          stack.add(stack[stack.length - 2]);
-        }
-        break;
-      default:
-        throw FormatException('Unknown operator: $token');
-    }
-  }
-
-  void makeDefinition(String token, List<String> definition) {
-    if (definitions.containsKey(token)) {
-      throw FormatException('Duplicate definition');
-    } else {
-      definitions[token] = definition;
-    }
-  }
-
   void evaluate(String input) {
-    final tokens = input.split(' ');
-    var isInDefinition = false;
-    var definitionName = '';
-    var definitionContent = <String>[];
-    for (var token in tokens) {
-      if (token == ':') {
-        isInDefinition = true;
+    input = input.toLowerCase();
+    var inputs = input.split(" ");
+    if (RegExp(r'^:.+;$').hasMatch(input)) {
+      if (int.tryParse(inputs[1]) != null)
+        throw Exception("Invalid definition");
+      var newDefinition = inputs.sublist(2, inputs.length - 1).join(" ");
+      definitions.entries.forEach((element) {
+        newDefinition = newDefinition.replaceAll(element.key, element.value);
+      });
+      this.definitions[inputs[1]] = newDefinition;
+      return;
+    }
+    definitions.entries.forEach((element) {
+      input = input.replaceAll(element.key, element.value);
+    });
+    inputs = input.split(" ");
+    for (String i in inputs) {
+      if (int.tryParse(i) != null) {
+        this.stack.add(int.parse(i));
         continue;
       }
-      if (token == ';') {
-        isInDefinition = false;
-        if (definitionName.isNotEmpty) {
-          makeDefinition(definitionName, definitionContent);
-        } else {
-          throw FormatException('Invalid definition');
+      if ("+-*/".contains(i)) {
+        if (this.stack.length < 2) throw Exception("Stack empty");
+        if (i == "/" && this.stack[this.stack.length - 1] == 0)
+          throw Exception("Division by zero");
+        var value = 0;
+        switch (i) {
+          case "+":
+            value = this.stack[this.stack.length - 2] +
+                this.stack[this.stack.length - 1];
+            break;
+          case "-":
+            value = this.stack[this.stack.length - 2] -
+                this.stack[this.stack.length - 1];
+            break;
+          case "*":
+            value = this.stack[this.stack.length - 2] *
+                this.stack[this.stack.length - 1];
+            break;
+          case "/":
+            value = this.stack[this.stack.length - 2] ~/
+                this.stack[this.stack.length - 1];
+            break;
         }
-        definitionName = '';
-        definitionContent = [];
+        this.stack[this.stack.length - 2] = value;
+        this.stack.removeLast();
         continue;
       }
-      if (isInDefinition && definitionName.isEmpty) {
-        if (!token.isNumber()) {
-          definitionName = token;
-        } else {
-          throw FormatException('Invalid definition');
-        }
+      if (i == "dup") {
+        if (this.stack.length == 0) throw Exception("Stack empty");
+        this.stack.add(this.stack[this.stack.length - 1]);
         continue;
       }
-      if (isInDefinition && definitionName.isNotEmpty) {
-      definitionContent.add(token);
-      continue;
+      if (i == "drop") {
+        if (this.stack.length == 0) throw Exception("Stack empty");
+        this.stack.removeLast();
+        continue;
       }
-      if (definitions.containsKey(token)) {
-      evaluate(definitions[token]!.join(' '));
-      continue;
+      if (i == "swap") {
+        if (this.stack.length < 2) throw Exception("Stack empty");
+        var temp = this.stack[this.stack.length - 2];
+        this.stack[this.stack.length - 2] = this.stack[this.stack.length - 1];
+        this.stack[this.stack.length - 1] = temp;
+        continue;
       }
-      if (token.isIntegerOperator()) {
-      arithmetic(token);
-      continue;
+      if (i == "over") {
+        if (this.stack.length < 2) throw Exception("Stack empty");
+        this.stack.add(this.stack[this.stack.length - 2]);
+        continue;
       }
-      if (token.isStackManipulation()) {
-      stackManipulation(token);
-      continue;
-      }
-      if (token.isNumber()) {
-      stack.add(int.parse(token));
-      continue;
-      }
+      if (!this.definitions.keys.contains(i))
+        throw Exception("Unknown command");
     }
   }
 }
-
-extension on String {
-bool isNumber() => int.tryParse(this) != null;
-bool isStackManipulation() =>
-['dup', 'drop', 'swap', 'over'].contains(this.toLowerCase());
-bool isIntegerOperator() => ['+', '-', '*', '/'].contains(this);
-bool isDefinitionStart() => this == ':';
-bool isDefinitionEnd() => this == ';';
-}
-

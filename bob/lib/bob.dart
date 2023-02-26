@@ -1,15 +1,11 @@
 class Bob {
   String response(String message) {
     message = message.trim();
-    if(message.isEmpty) {
-      return 'Fine. Be that way!';
-    }
-    if(message.endsWith('?')) {
-      return 'Sure.';
-    }
-    if(message.endsWith('!') || (message.toUpperCase() == message && message.contains(RegExp(r'[A-Z]')))) {
-      return 'Whoa, chill out!';
-    }
-    return 'Whatever.';
+    if (message.isEmpty) return 'Fine. Be that way!';
+    bool isQuestion = message.endsWith('?');
+    bool isYelling = message.toUpperCase() == message && message.contains(RegExp('[A-Z]'));
+    return isQuestion
+        ? isYelling ? 'Calm down, I know what I\'m doing!' : 'Sure.'
+        : isYelling ? 'Whoa, chill out!' : 'Whatever.';
   }
 }

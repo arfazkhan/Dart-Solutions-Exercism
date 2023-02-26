@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 class Anagram {
   List<String> findAnagrams(String target, List<String> candidates) {
     target = target.toLowerCase();
@@ -11,7 +9,7 @@ class Anagram {
       if (candidateLower == target) {
         continue;
       }
-      List<int> candidateMap = _getCharCountList(candidateLower);
+      List<int> candidateMap = _getCharCountList(candidateLower.replaceAll(RegExp(r'[^a-z]'), ''));
       if (_isAnagram(targetMap, candidateMap)) {
         result.add(candidate);
       }
