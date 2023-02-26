@@ -1,19 +1,9 @@
 class NthPrime {
   int prime(int n) {
-    if (n <= 0) throw ArgumentError('Invalid: There is no zeroth prime');
+    if (n <= 0) throw ArgumentError('There is no zeroth prime');
     var primes = [2];
-    var i = 3;
-    while (primes.length < n) {
-      var isPrime = true;
-      var maxFactor = (i / 2).ceil();
-      for (var j = 2; j <= maxFactor; j++) {
-        if (i % j == 0) {
-          isPrime = false;
-          break;
-        }
-      }
-      if (isPrime) primes.add(i);
-      i++;
+    for (var i = 3; primes.length < n; i += 2) {
+      if (primes.every((p) => i % p != 0)) primes.add(i);
     }
     return primes.last;
   }

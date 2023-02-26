@@ -1,7 +1,6 @@
 class Pangram {
- bool isPangram(String sentence) {
-  Set<String> letters = Set.from(sentence.toLowerCase().split(""));
-  letters.removeWhere((e) => e == " ");
-  return letters.length == 26;
-}
+  bool isPangram(String sentence) {
+    Set<String> letters = Set.from(sentence.replaceAll(RegExp(r'[^a-zA-Z]'), '').toLowerCase().split(""));
+    return letters.length == 26;
+  }
 }

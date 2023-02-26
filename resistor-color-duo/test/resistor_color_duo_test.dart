@@ -13,31 +13,31 @@ void main() {
     test('Blue and grey', () {
       final result = resistorColorDuo.value(<String>['blue', 'grey']);
       expect(result, equals(68));
-    }, skip: true);
+    }, skip: false);
 
     test('Yellow and violet', () {
       final result = resistorColorDuo.value(<String>['yellow', 'violet']);
       expect(result, equals(47));
-    }, skip: true);
+    }, skip: false);
 
     test('White and red', () {
       final result = resistorColorDuo.value(<String>['white', 'red']);
       expect(result, equals(92));
-    }, skip: true);
+    }, skip: false);
 
     test('Orange and orange', () {
       final result = resistorColorDuo.value(<String>['orange', 'orange']);
       expect(result, equals(33));
-    }, skip: true);
+    }, skip: false);
 
     test('Ignore additional colors', () {
       final result = resistorColorDuo.value(<String>['green', 'brown', 'orange']);
       expect(result, equals(51));
-    }, skip: true);
+    }, skip: false);
 
     test('Black and brown, one-digit', () {
       final result = resistorColorDuo.value(<String>['black', 'brown']);
       expect(result, equals(1));
-    }, skip: true);
+    }, skip: false);
   });
 }
